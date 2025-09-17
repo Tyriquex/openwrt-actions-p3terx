@@ -1,0 +1,44 @@
+name: Build WireGuard for OpenWrt
+
+# 手动触发workflow
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit Hash (e.g., r3071-73fdfdf6a)'
+        required: true
+        default: '522855254'
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout OpenWrt repository
+      uses: actions/checkout@v3
+      with:
+        repository: coolsnowwolf/lede
+        ref: ${{ github.event.inputs.commit }}
+
+    - name: Set up OpenWrt build environment
+      run: |
+        # 更新 feed 并安装依赖
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+
+    - name: Configure build for WireGuard
+      run: |
+        # 选择编译 WireGuard 内核模块和工具
+        make menuconfig
+        make defconfig
+
+    - name: Build WireGuard kernel module and tools
+      run: |
+        make package/kernel/linux/compile V=s
+        make package/network/utils/wireguard-tools/compile V=s
+
+    - name: Upload built artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: wireguard-ipks
+        path: bin/packages/mipsel_24kc/*
