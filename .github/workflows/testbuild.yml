@@ -17,7 +17,7 @@ jobs:
     - name: Checkout OpenWrt repository
       uses: actions/checkout@main
       with:
-        repository: coolsnowwolf/lede
+        repository: https://github.com/coolsnowwolf/lede
         ref: ${{ github.event.inputs.commit }}
 
     - name: Set up OpenWrt build environment
