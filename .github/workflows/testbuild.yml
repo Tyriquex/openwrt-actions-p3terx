@@ -7,14 +7,14 @@ on:
       commit:
         description: 'Commit Hash (e.g., r3071-73fdfdf6a)'
         required: true
-        default: '522855254'
+        default: '522855254c368929cf7f9e50fed6e4b76fa6dc3c'
       ssh:
         description: 'SSH connection to Actions'
         required: false
         default: 'false'
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: 522855254c368929cf7f9e50fed6e4b76fa6dc3c
+  REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
   DIY_P1_SH: diy-part1.sh
@@ -33,6 +33,10 @@ jobs:
     steps:
     - name: Checkout OpenWrt repository
       uses: actions/checkout@main
+      with:
+        repository: coolsnowwolf/lede
+        ref: ${{ github.event.inputs.commit }}
+        path: openwrt
 
     - name: Initialization environment
       env:
