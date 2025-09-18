@@ -8,7 +8,24 @@ on:
         description: 'Commit Hash (e.g., r3071-73fdfdf6a)'
         required: true
         default: '522855254'
-
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
+env:
+  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_BRANCH: 5b1838d04
+  FEEDS_CONF: feeds.conf.default
+  CONFIG_FILE: .config
+  DIY_P1_SH: diy-part1.sh
+  DIY_P2_SH: diy-part2.sh
+  UPLOAD_BIN_DIR: true
+  UPLOAD_FIRMWARE: true
+  UPLOAD_COWTRANSFER: false
+  UPLOAD_WETRANSFER: false
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
+  
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -16,9 +33,6 @@ jobs:
     steps:
     - name: Checkout OpenWrt repository
       uses: actions/checkout@main
-      with:
-        repository: https://github.com/coolsnowwolf/lede
-        ref: ${{ github.event.inputs.commit }}
 
     - name: Set up OpenWrt build environment
       run: |
